@@ -1,0 +1,24 @@
+variable:
+  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_DRIVER: overlay2
+
+postman:
+  stage: test
+  image: gitlab.sdu.dk:5050/odw-e2020/docker
+  services:
+    - docker:19.03.1-dind
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker-compose up --build -d
+    - sleep 30
+  script:
+    - echo "Testing..."
+    - docker-compose exec -T newman newman run --env-var url=proxy https://scalableteaching-archived.sdu.dk/test-static/odw-2020.json
+    - docker-compose exec -T proxy openssl verify -CAfile /etc/nginx/ssl/rootCA.pem /etc/nginx/ssl/site.crt
+    - wget --no-check-certificate --timeout 1 -qO /dev/null https://localhost:5000 || echo "Backend not exposed"
+    - wget --no-check-certificate --timeout 1 -qO /dev/null https://localhost:3306 || echo "Database not exposed"
+  after_script:
+    - echo "Printing Docker Compose logs"
+    - docker-compose logs
+    - docker-compose down -v --rmi local --remove-orphans
+    - docker volume ls -qf dangling=true | xargs -r docker volume rm 

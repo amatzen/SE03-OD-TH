@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $.getJSON('/persons', function(data) {
+                var table = '<table border="1">';
+                /* loop over each object in the array to create rows*/
+                $.each(data, function(index, item) {
+                    /* add to html string started above*/
+                    table += '<tr><td>' + item.PersonID + '</td><td>' + item.Firstname + '</td><td>' + item.Lastname + '</td></tr>';
+                });
+                table += '</table>';
+                console.log("ookok");
+                /* insert the html string*/
+                $("#content").html(table);
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="content"></div>
+</body>
+</html>

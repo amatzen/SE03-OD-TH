@@ -1,0 +1,16 @@
+version: '3.5'
+
+services:
+  proxy:
+    networks:
+      - test
+  newman:
+    image: gitlab.sdu.dk:5050/odw-e2020/postman
+    command: sleep 3600
+    restart: on-failure
+    networks:
+      - test
+
+networks:
+  test:
+
