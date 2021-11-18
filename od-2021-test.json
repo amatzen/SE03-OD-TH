@@ -1,0 +1,234 @@
+{
+	"info": {
+		"_postman_id": "b789db17-b466-40f0-a691-76b89a57ab08",
+		"name": "ODW-TakeHome",
+		"description": "# Test suite for OD 2021\r\n\r\nThe takehome assigment is completed and passed when all tests passes.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Insert.html exists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f259277b-4d30-4e5c-bb1b-3b26dfe418c7",
+						"exec": [
+							"pm.test('HTTP response code 200 received', function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('Checksum validation', function() {\r",
+							"    var hash = CryptoJS.SHA256(pm.response.text()).toString();\r",
+							"    pm.expect(hash).to.equal('1c3e92ca948cf00bedf7a9ddabe380b981220e0cfaea4702a9dc17c52f140cea');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{url}}/insert.html",
+					"protocol": "https",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"insert.html"
+					]
+				},
+				"description": "Ensuring that the insert.html site exists and is untouched."
+			},
+			"response": []
+		},
+		{
+			"name": "Select.html exist",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "b2dad2aa-d07d-4a61-b0f4-551cc42c7bd9",
+						"exec": [
+							"pm.test('HTTP response code 200 received', function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test('Checksum validation', function() {\r",
+							"    var hash = CryptoJS.SHA256(pm.response.text()).toString();\r",
+							"    pm.expect(hash).to.equal('01388a1cddc2f846958534ef44f0c4f0f21dcbefa4000612e130d35e9fadb516');\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{url}}/select.html",
+					"protocol": "https",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"select.html"
+					]
+				},
+				"description": "Ensuring that the select.html site exists and is untouched."
+			},
+			"response": []
+		},
+		{
+			"name": "Insert person",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ce8b88d8-b72d-4116-9741-e400b6ffbcb7",
+						"exec": [
+							"pm.environment.set('firstName', pm.variables.replaceIn('{{$randomFirstName}}'));\r",
+							"pm.environment.set('lastName', pm.variables.replaceIn('{{$randomLastName}}'));"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "dbb3b364-dacb-41bf-8f48-30b5a32ec595",
+						"exec": [
+							"pm.test('HTTP response code 200 received', function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "firstname",
+							"value": "{{firstName}}",
+							"type": "text"
+						},
+						{
+							"key": "lastname",
+							"value": "{{lastName}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://{{url}}/person",
+					"protocol": "https",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"person"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Select person",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d8750559-865c-42be-b970-d6f32ae76f27",
+						"exec": [
+							"pm.test('HTTP response code 200 received', function() {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check selectPersons\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.length).to.be.above(0);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Test inserted values\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var lastElm = jsonData.length;\r",
+							"    pm.expect(jsonData[lastElm - 1].Firstname).to.eql(pm.environment.get(\"firstName\"));\r",
+							"    pm.expect(jsonData[lastElm - 1].Lastname).to.eql(pm.environment.get(\"lastName\"));\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{url}}/persons",
+					"protocol": "https",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"persons"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "c779f59d-01c0-4e14-8a69-6d5b82d44794",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "af947f79-902f-41e6-aeb3-320760b3c97e",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "a8c0df3f-03d4-4210-a2b5-40199c832d4a",
+			"key": "url",
+			"value": ""
+		}
+	],
+	"protocolProfileBehavior": {}
+}

@@ -13,7 +13,7 @@ postman:
     - sleep 30
   script:
     - echo "Testing..."
-    - docker-compose exec -T newman newman run --env-var url=proxy https://scalableteaching-archived.sdu.dk/test-static/odw-2020.json
+    - docker-compose exec -T newman newman run --env-var url=proxy od-2021-test.json
     - docker-compose exec -T proxy openssl verify -CAfile /etc/nginx/ssl/rootCA.pem /etc/nginx/ssl/site.crt
     - wget --no-check-certificate --timeout 1 -qO /dev/null https://localhost:5000 || echo "Backend not exposed"
     - wget --no-check-certificate --timeout 1 -qO /dev/null https://localhost:3306 || echo "Database not exposed"
