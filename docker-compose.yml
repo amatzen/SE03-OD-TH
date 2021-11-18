@@ -1,0 +1,24 @@
+version: '3.5'
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile-nginx
+    ports:
+      - "80:80"
+    networks:
+      - proxybackend
+
+  backend:
+    build:
+      context: backend
+      dockerfile: Dockerfile-backend
+    networks:
+      - proxybackend
+      - backenddb
+
+  database:
+    image: mysql
+
+    networks:
+      - backenddb
