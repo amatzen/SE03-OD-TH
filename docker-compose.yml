@@ -1,6 +1,8 @@
 version: '3.5'
 services:
   nginx:
+    depends_on:
+      - backend
     build:
       context: .
       dockerfile: Dockerfile-nginx
@@ -9,17 +11,24 @@ services:
       - "443:443"
     networks:
       - proxybackend
-
   backend:
+    depends_on:
+      - database
     build:
       context: backend
-      dockerfile: Dockerfile-backend
+      dockerfile: Dockerfile
     networks:
       - proxybackend
       - backenddb
-
   database:
     image: mysql
 
+    environment:
+      MYSQL_DATABASE: database
+      MYSQL_ROOT_PASSWORD: password
     networks:
       - backenddb
+
+networks:
+  proxybackend:
+  backenddb:
