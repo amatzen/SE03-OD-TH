@@ -36,8 +36,6 @@ def persons():
 
 @app.post('/person')
 def new_person(firstname: str = Form(...), lastname: str = Form(...)):
-    session.add(
-        Person(Firstname = firstname, Lastname = lastname)
-    )
+    session.add(Person(Firstname = firstname, Lastname = lastname))
     session.commit()
     return RedirectResponse("https://localhost/select.html", status_code=303)
