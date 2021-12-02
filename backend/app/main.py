@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 
 from fastapi import FastAPI, Form
 from fastapi.encoders import jsonable_encoder
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.responses import JSONResponse, Response
 
 from pydantic import BaseModel
 
@@ -36,6 +36,7 @@ def persons():
 
 @app.post('/person')
 def new_person(firstname: str = Form(...), lastname: str = Form(...)):
-    session.add(Person(Firstname = firstname, Lastname = lastname))
+    person = Person(Firstname = firstname, Lastname = lastname)
+    session.add(person)
     session.commit()
-    return RedirectResponse("https://localhost/select.html", status_code=303)
+    return Response(status_code=200)
