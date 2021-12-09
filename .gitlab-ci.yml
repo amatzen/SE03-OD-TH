@@ -1,9 +1,16 @@
+variables:
+  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_DRIVER: overlay2
+
 postman:
+  tags:
+      - OD
   stage: test
   image: gitlab.sdu.dk:5050/odw-e2020/docker
   services:
-    - docker:19.03.1-dind
+    - docker:20-dind
   before_script:
+    - apk add docker-compose
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     - docker-compose up --build -d
     - sleep 30
