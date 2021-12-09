@@ -9,11 +9,15 @@ services:
     expose:
       - 80
       - 443
+    ports:
+      - 80:80
+      - 443:443
     networks:
       - proxybackend
   backend:
     depends_on:
-      - database
+        database:
+          condition: service_healthy
     build:
       context: backend
       dockerfile: Dockerfile
@@ -22,7 +26,12 @@ services:
       - backenddb
   database:
     image: mysql
-
+    restart: always
+    healthcheck:
+      test: "/usr/bin/mysql -u root -ppassword --execute \"SHOW DATABASES;\""
+      interval: 5s
+      timeout: 2s
+      retries: 10
     environment:
       MYSQL_DATABASE: database
       MYSQL_ROOT_PASSWORD: password

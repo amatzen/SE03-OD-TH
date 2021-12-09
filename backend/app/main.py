@@ -7,8 +7,6 @@ from fastapi import FastAPI, Form
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse, Response
 
-from pydantic import BaseModel
-
 # DB
 DATABASE_URL = 'mysql://root:password@database/database'
 
